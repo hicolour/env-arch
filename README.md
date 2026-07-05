@@ -19,6 +19,16 @@ Installs a bare-minimum system — just enough to boot, connect to wifi, and clo
 
 ## Usage from Arch ISO
 
+Connect to wifi first:
+
+```bash
+iwctl --passphrase 'YOUR_PASS' station wlan0 connect YOUR_SSID
+```
+
+Quote the passphrase with single quotes to avoid shell interpretation of special characters like `!`.
+
+Then run the installer:
+
 ```bash
 curl -fsSL https://github.com/hicolour/env-arch/releases/latest/download/env-arch.tar.gz | tar xz
 cd env-arch && ./install.sh
