@@ -40,7 +40,7 @@ For a different disk:
 DISK=/dev/nvme1n1 ./install.sh
 ```
 
-The script checks connectivity, auto-detects CPU microcode (Intel/AMD), asks for hostname, username, LUKS passphrase, and user password, then runs a dry-run before the real install.
+The script checks connectivity, auto-detects CPU microcode (Intel/AMD), asks for hostname, username, LUKS passphrase, and user password, then partitions, encrypts, and installs everything using standard tools (sgdisk, cryptsetup, pacstrap, arch-chroot).
 
 ## After install
 
@@ -56,8 +56,8 @@ cd your-env-setup && ./install.sh
 git tag v1.0.0 && git push --tags
 ```
 
-GitHub Actions packages `install.sh` and the archinstall configs into `env-arch.tar.gz` and attaches it to the release.
+GitHub Actions packages `install.sh` into `env-arch.tar.gz` and attaches it to the release.
 
 ## Security
 
-`user_credentials.json` contains your LUKS passphrase in plaintext. It is generated at install time and is gitignored.
+Passwords are passed via variables and unset immediately after use. Nothing is written to disk.

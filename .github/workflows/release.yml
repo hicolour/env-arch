@@ -17,7 +17,7 @@ jobs:
       - name: Package archive
         run: |
           mkdir -p dist/env-arch
-          cp install.sh archinstall.json dist/env-arch/
+          cp install.sh dist/env-arch/
           tar -czf dist/env-arch.tar.gz -C dist env-arch
 
       - name: Upload artifact
