@@ -20,7 +20,7 @@ Installs a bare-minimum system — just enough to boot, connect to wifi, and clo
 ## Usage from Arch ISO
 
 ```bash
-curl -fsSL https://github.com/OWNER/env-arch/releases/latest/download/env-arch.tar.gz | tar xz
+curl -fsSL https://github.com/hicolour/env-arch/releases/latest/download/env-arch.tar.gz | tar xz
 cd env-arch && ./install.sh
 ```
 
