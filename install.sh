@@ -153,7 +153,7 @@ mount "$PART_BOOT" /mnt/boot
 
 echo
 echo "Installing base system..."
-PKGS=(base linux linux-lts linux-firmware btrfs-progs networkmanager git curl systemd-zram-generator)
+PKGS=(base linux linux-lts linux-firmware btrfs-progs networkmanager git curl)
 if [[ -n "$UCODE" ]]; then
   PKGS+=("$UCODE")
 fi
@@ -229,12 +229,40 @@ sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 systemctl enable NetworkManager
 systemctl enable fstrim.timer
 
-# zram swap
-cat > /etc/systemd/zram-generator.conf <<EOF
-[zram0]
-zram-size = ram / 2
-compression-algorithm = zstd
+# zram swap — script runs at boot to size dynamically
+cat > /usr/local/bin/zram-swap <<'ZRAM'
+#!/bin/bash
+case "$1" in
+  start)
+    modprobe zram
+    echo zstd > /sys/block/zram0/comp_algorithm
+    echo $(( $(awk '/MemTotal/{print $2}' /proc/meminfo) * 1024 / 2 )) > /sys/block/zram0/disksize
+    mkswap /dev/zram0
+    swapon -p 100 /dev/zram0
+    ;;
+  stop)
+    swapoff /dev/zram0
+    echo 1 > /sys/class/zram-control/hot_remove 2>/dev/null || true
+    ;;
+esac
+ZRAM
+chmod +x /usr/local/bin/zram-swap
+
+cat > /etc/systemd/system/zram-swap.service <<EOF
+[Unit]
+Description=zram swap
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/zram-swap start
+ExecStop=/usr/local/bin/zram-swap stop
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
 EOF
+
+systemctl enable zram-swap.service
 
 CHROOT
 
