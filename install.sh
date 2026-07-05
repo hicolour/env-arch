@@ -38,14 +38,7 @@ elif grep -q "^vendor_id.*AuthenticAMD" /proc/cpuinfo 2>/dev/null; then
   UCODE="amd-ucode"
 fi
 
-VERSION=$(archinstall --version 2>&1 | grep -oE '[0-9]+\.[0-9]+(\.[0-9]+)?' | head -n1 || true)
-MAJOR=${VERSION%%.*}
-
-if [[ "$MAJOR" == "2" ]]; then
-  TEMPLATE="archinstall-2x.json"
-else
-  TEMPLATE="archinstall-3x.json"
-fi
+TEMPLATE="archinstall.json"
 
 if [[ ! -f "$TEMPLATE" ]]; then
   echo "Missing $TEMPLATE" >&2
@@ -137,7 +130,7 @@ echo "=== Arch Linux LUKS Install ==="
 echo "Hostname:    $HOSTNAME"
 echo "User:        $USERNAME"
 echo "Disk:        $DISK"
-echo "Config:      $TEMPLATE (archinstall $VERSION)"
+echo "Config:      $TEMPLATE"
 echo "Locale:      $SYS_LANG"
 echo "Timezone:    $TIMEZONE"
 echo "Microcode:   ${UCODE:-none}"
