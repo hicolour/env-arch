@@ -111,6 +111,11 @@ if [[ "$CONFIRM" != "WIPE-$DISK" ]]; then
   exit 1
 fi
 
+# --- Cleanup previous run ---
+
+umount -R /mnt 2>/dev/null || true
+cryptsetup close cryptroot 2>/dev/null || true
+
 # --- Partition ---
 
 echo
@@ -147,13 +152,13 @@ mount -o compress=zstd,noatime,subvol=@ /dev/mapper/cryptroot /mnt
 mkdir -p /mnt/{boot,home,var}
 mount -o compress=zstd,noatime,subvol=@home /dev/mapper/cryptroot /mnt/home
 mount -o compress=zstd,noatime,subvol=@var /dev/mapper/cryptroot /mnt/var
-mount "$PART_BOOT" /mnt/boot
+mount -o fmask=0077,dmask=0077 "$PART_BOOT" /mnt/boot
 
 # --- Install base system ---
 
 echo
 echo "Installing base system..."
-PKGS=(base linux linux-lts linux-firmware btrfs-progs networkmanager git curl)
+PKGS=(base linux linux-lts linux-firmware btrfs-progs networkmanager git curl sudo)
 if [[ -n "$UCODE" ]]; then
   PKGS+=("$UCODE")
 fi
