@@ -50,7 +50,7 @@
             "flags": [],
             "fs_type": "btrfs",
             "mount_options": ["compress=zstd", "noatime"],
-            "mountpoint": null,
+            "mountpoint": "/",
             "obj_id": "26c98d2a-a560-4a63-a0b1-819b6d7f8a35",
             "size": {
               "sector_size": {
