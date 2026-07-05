@@ -9,7 +9,7 @@
   "bootloader": "Systemd-boot",
   "debug": false,
   "disk_config": {
-    "config_type": "default_layout",
+    "config_type": "manual_partitioning",
     "device_modifications": [
       {
         "dev_path": "/dev/nvme0n1",
@@ -17,7 +17,7 @@
         "partitions": [
           {
             "btrfs": [],
-            "flags": ["boot", "esp"],
+            "flags": ["Boot", "ESP"],
             "fs_type": "fat32",
             "mount_options": [],
             "mountpoint": "/boot",
@@ -50,7 +50,7 @@
             "flags": [],
             "fs_type": "btrfs",
             "mount_options": ["compress=zstd", "noatime"],
-            "mountpoint": "/",
+            "mountpoint": null,
             "obj_id": "26c98d2a-a560-4a63-a0b1-819b6d7f8a35",
             "size": {
               "sector_size": {
